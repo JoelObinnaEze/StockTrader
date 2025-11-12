@@ -26,7 +26,7 @@ class StockTradingApp(ctk.CTk):
         login_frame = ctk.CTkFrame(self)
         login_frame.pack(pady=80, padx=60, fill="both", expand=True)
 
-        ctk.CTkLabel(login_frame, text="Welcome to StockSim!", font=("Arial", 24, "bold")).pack(pady=20)
+        ctk.CTkLabel(login_frame, text="Welcome to StockTrader", font=("Arial", 24, "bold")).pack(pady=20)
 
         ctk.CTkLabel(login_frame, text="Username:").pack(pady=(10, 5))
         username_entry = ctk.CTkEntry(login_frame)

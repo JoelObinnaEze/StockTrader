@@ -1,100 +1,50 @@
+# StockTrader
 
-# 💸 StockTrader - Stock Trading Simulator
+A desktop paper-trading workstation for testing market ideas with virtual capital. It combines quote lookup, guarded buy and sell orders, portfolio analysis, an execution ledger, and price research in one focused interface.
 
-A GUI-based stock trading simulator built with `customtkinter` that allows users to register, buy/sell stocks, view their portfolio, track transaction history, and analyze stock growth trends. It's a self-contained educational tool that mimics the experience of trading in the stock market using real-time financial data.
+## What changed
 
----
+- Persistent workstation navigation instead of disconnected screens
+- Overview with net worth, cash, exposure, unrealized P/L, allocation, and local portfolio signals
+- Non-blocking market-data requests so the UI stays responsive
+- Weighted average cost, validated order sizes, and atomic cash/position updates
+- Scrypt password hashing with automatic upgrade when a legacy account signs in
+- One yfinance market-data path; no embedded API key
+- Private local SQLite data instead of a populated database committed to Git
 
-## 🚀 Features
+The signal brief is deterministic portfolio analysis, not an LLM and not investment advice. Market data may be delayed.
 
-- 🔐 **User Authentication**  
-  Register and log in with a secure interface that includes caps lock detection and error handling.
+## Run
 
-- 📈 **Live Stock Search & Purchase**  
-  Search for real-time stock data using APIs and purchase shares directly from the interface.
+Requires Python 3.9+.
 
-- 💼 **Portfolio Management**  
-  View your holdings, including quantities, buy price, live price, and calculated profit/loss.
-
-- 🕰️ **Transaction History**  
-  Review a detailed history of all stock purchases and sales with timestamps.
-
-- 📊 **Growth Analytics**  
-  Visualize the last month's price trends of a stock using interactive Matplotlib charts.
-
-- 🧾 **Clean UI**  
-  Built using `customtkinter` with a modern dark theme and structured navigation bar.
-
----
-
-## 🛠️ Tech Stack
-
-| Layer              | Technology         |
-|--------------------|--------------------|
-| GUI Framework      | `customtkinter`    |
-| Data Fetching      | `yfinance`, AlphaVantage API (`StockAPI`) |
-| Charting           | `matplotlib`       |
-| Backend Logic      | OOP-based modules (`User`, `Stock`, `Portfolio`, etc.) |
-| Additional Tools   | `FigureCanvasTkAgg` for embedding charts |
-
----
-
-
-## 📁 Project Structure
-
-```
-StockTrader/
-│
-├── data.db                  # Database for user info
-├── gui.py                   # Main GUI application
-├── user.py                  # User class: login, registration
-├── stock_api.py             # Handles API calls to fetch stock data
-├── stock.py                 # Stock object representation
-├── portfolio.py             # Manages user portfolios
-├── price.py                 # Fetches live prices
-├── transaction.py           # Transaction class: buying, selling
-└── README.md                # Project documentation
-```
-
----
-
-## 🧪 How to Run
-
-### Requirements:
-- Python 3.9+
-- `yfinance`
-- `matplotlib`
-- `customtkinter`
-
-### Installation:
-
-1. **Clone the Repository**
-```bash
-git clone https://github.com/JoelObinnaEze/StockTrader.git
-cd StockTrader
-```
-
-2. **Install Dependencies**
-```bash
-pip install -r requirements.txt
-```
-
-3. **Run the App**
-```bash
+```powershell
+python -m pip install -r requirements.txt
 python gui.py
 ```
 
----
+The app creates a fresh, ignored `stocktrader.db` on first launch.
 
-## 👨‍💻 Author
+## Verify
 
-**Joel Obinna-Eze**  
-*Software Engineering Student | Full-stack Developer*  
-[GitHub](https://github.com/JoelObinnaEze)
+```powershell
+python -m unittest -v
+python -m compileall -q database.py gui.py insights.py portfolio.py stock.py stock_api.py transaction.py user.py
+```
 
----
+## Structure
 
-## 📝 License
+| File | Responsibility |
+|---|---|
+| `gui.py` | Authentication, workstation shell, and five product views |
+| `database.py` | Local schema and first-run initialization |
+| `user.py` | Authentication and atomic trade execution |
+| `portfolio.py` | Portfolio position reads |
+| `transaction.py` | Execution-ledger access |
+| `stock_api.py` | Validated quote and history boundary |
+| `insights.py` | Deterministic portfolio analysis |
+| `test_core.py` | Money-path, account, market-data, and analysis checks |
 
-This project is for educational purposes only.  
-Feel free to fork or contribute!
+## Data and security
+
+`stocktrader.db`, environment files, key files, and generated Python artifacts are ignored. The original GitHub history contained a populated database and an AlphaVantage key; if either held real credentials, rotate them and purge that history before treating the repository as private or secure.

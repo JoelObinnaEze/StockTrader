@@ -1,0 +1,22 @@
+# StockTrader remake
+
+- [x] Task 1: Protect account and money paths
+  - Acceptance: passwords are salted, legacy login upgrades safely, and invalid buys/sells have no side effects.
+  - Verify: `python -m unittest -v test_core.CoreTradingTests`
+  - Files: `user.py`, `portfolio.py`, `transaction.py`, `test_core.py`
+- [x] Task 2: Simplify market data
+  - Acceptance: quotes use yfinance only, invalid symbols return a recoverable miss, and no API key exists in source.
+  - Verify: `python -m compileall -q stock_api.py`
+  - Files: `stock_api.py`, `requirements.txt`
+- [x] Checkpoint: trusted core
+  - Verify: full tests pass and secret scan is clean.
+- [x] Task 3: Build the workstation shell and views
+  - Acceptance: all five simulator views work inside one persistent shell with loading, empty, and error states.
+  - Verify: launch smoke check and manual navigation check.
+  - Files: `gui.py`, `insights.py`, `test_core.py`
+- [x] Task 4: Finish documentation and hygiene
+  - Acceptance: README matches the rebuilt product and generated files are ignored.
+  - Verify: full tests, compile check, and final diff review.
+  - Files: `README.md`, `.gitignore`, `tasks/todo.md`
+- [x] Checkpoint: complete
+  - Verify: every success criterion in `SPEC.md` is met.

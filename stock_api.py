@@ -1,27 +1,53 @@
-import requests
-from price import get_stock_price
+import math
+
 import yfinance as yf
 
-API_KEY = 'M63HE2XB7TVPNBVY'
-BASE_URL = 'https://www.alphavantage.co/query'
 
 class StockAPI:
     @staticmethod
     def get_stock(symbol):
-        url = f"{BASE_URL}?function=GLOBAL_QUOTE&symbol={symbol}&apikey={API_KEY}"
-        response = requests.get(url)
-        data = response.json()
-        msft = yf.Ticker(symbol)
+        symbol = _normalize_symbol(symbol)
+        if not symbol:
+            return None
 
-        if 'Global Quote' in data:
-            quote = data['Global Quote']
-            return {
-                'symbol': quote['01. symbol'],
-                'price': float(get_stock_price(symbol)),
-                'name': msft.info['longName']
-            }
+        try:
+            ticker = yf.Ticker(symbol)
+            history = ticker.history(period="5d")
+            if history.empty:
+                return None
+            price = float(history["Close"].iloc[-1])
+        except Exception:
+            return None
+        if not math.isfinite(price) or price <= 0:
+            return None
+        try:
+            info = ticker.get_info()
+        except Exception:
+            info = {}
+        return {
+            "symbol": symbol,
+            "name": info.get("longName") or info.get("shortName") or symbol,
+            "price": price,
+        }
+
+    @staticmethod
+    def get_history(symbol, period="1mo"):
+        symbol = _normalize_symbol(symbol)
+        if not symbol:
+            return None
+        try:
+            history = yf.Ticker(symbol).history(period=period)
+            return None if history.empty else history
+        except Exception:
+            return None
+
+
+def _normalize_symbol(symbol):
+    if not isinstance(symbol, str):
         return None
-
-if __name__ == "__main__":
-    stock = StockAPI.get_stock('AAPL')
-    print(stock)
+    symbol = symbol.strip().upper()
+    allowed = set(".-^=")
+    valid = 1 <= len(symbol) <= 15 and all(
+        character.isalnum() or character in allowed for character in symbol
+    )
+    return symbol if valid else None

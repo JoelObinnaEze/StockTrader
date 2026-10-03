@@ -1,39 +1,30 @@
 import sqlite3
-from datetime import datetime
+from contextlib import closing
 
-DB_NAME = 'data.db'
+from database import DB_NAME
+
 
 class Transaction:
     def __init__(self, user_id):
         self.user_id = user_id
 
-    def add_transaction(self, stock, quantity, price, transaction_type):
-        timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        with sqlite3.connect(DB_NAME) as conn:
-            cursor = conn.cursor()
-            cursor.execute('''
-                INSERT INTO transactions (user_id, stock, quantity, price, type, timestamp)
-                VALUES (?, ?, ?, ?, ?, ?)
-            ''', (self.user_id, stock, quantity, price, transaction_type, timestamp))
-            conn.commit()
-
     def get_transactions(self):
-        with sqlite3.connect(DB_NAME) as conn:
+        with closing(sqlite3.connect(DB_NAME)) as conn:
             cursor = conn.cursor()
-            cursor.execute('''
-                SELECT stock, quantity, price, type, timestamp
-                FROM transactions
-                WHERE user_id = ?
-                ORDER BY timestamp DESC
-            ''', (self.user_id,))
+            cursor.execute(
+                "SELECT stock, quantity, price, type, timestamp "
+                "FROM transactions WHERE user_id = ? "
+                "ORDER BY timestamp DESC LIMIT 500",
+                (self.user_id,),
+            )
             rows = cursor.fetchall()
             return [
                 {
-                    'stock': row[0],
-                    'quantity': row[1],
-                    'price': row[2],
-                    'type': row[3],
-                    'timestamp': row[4]
+                    "stock": row[0],
+                    "quantity": row[1],
+                    "price": row[2],
+                    "type": row[3],
+                    "timestamp": row[4],
                 }
                 for row in rows
             ]

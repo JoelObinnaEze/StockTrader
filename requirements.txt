@@ -1,4 +1,3 @@
 customtkinter
 yfinance
-requests
 matplotlib

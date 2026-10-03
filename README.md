@@ -1,50 +1,41 @@
-# StockTrader
+# StockTrader — Market Workstation Rebuild
 
-A desktop paper-trading workstation for testing market ideas with virtual capital. It combines quote lookup, guarded buy and sell orders, portfolio analysis, an execution ledger, and price research in one focused interface.
+StockTrader has been completely redesigned as a focused desktop paper-trading workstation. The rebuild keeps the virtual investing concept while replacing the interface, trading flow, data layer, and account security.
 
-## What changed
+## New workstation experience
 
-- Persistent workstation navigation instead of disconnected screens
-- Overview with net worth, cash, exposure, unrealized P/L, allocation, and local portfolio signals
-- Non-blocking market-data requests so the UI stays responsive
-- Weighted average cost, validated order sizes, and atomic cash/position updates
-- Scrypt password hashing with automatic upgrade when a legacy account signs in
-- One yfinance market-data path; no embedded API key
-- Private local SQLite data instead of a populated database committed to Git
+- Persistent sidebar navigation across Overview, Trade, Portfolio, Activity, and Research
+- Dark, high-contrast interface inspired by professional market terminals
+- Responsive layouts with clear loading, empty, success, and error states
+- Background market-data requests that keep the application responsive
+- Fast symbol lookup and shortcut access to frequently watched stocks
 
-The signal brief is deterministic portfolio analysis, not an LLM and not investment advice. Market data may be delayed.
+## Portfolio intelligence
 
-## Run
+- Live net worth, available cash, invested capital, and unrealized profit or loss
+- Position-level market value, allocation, average cost, and performance
+- Capital-allocation visualization and concentration tracking
+- Deterministic portfolio briefs that summarize exposure without presenting financial advice
+- Historical price research with one-month, three-month, and one-year studies
 
-Requires Python 3.9+.
+## Trading engine upgrades
 
-```powershell
-python -m pip install -r requirements.txt
-python gui.py
-```
+- Guarded whole-share paper orders with quantity and buying-power validation
+- Atomic cash, position, and transaction updates
+- Correct weighted-average cost calculations across repeated purchases
+- Validated sell orders that cannot alter an account when rejected
+- Reverse-chronological execution ledger for completed trades
 
-The app creates a fresh, ignored `stocktrader.db` on first launch.
+## Security and reliability
 
-## Verify
+- Scrypt password hashing with unique salts
+- Strict username, password, symbol, price, and order-size validation
+- Parameterized SQLite queries throughout the account and trading paths
+- A single validated yfinance boundary for quote and history data
+- Recoverable handling for unavailable, invalid, or non-finite market data
+- Private runtime databases, credentials, and generated artifacts excluded from version control
 
-```powershell
-python -m unittest -v
-python -m compileall -q database.py gui.py insights.py portfolio.py stock.py stock_api.py transaction.py user.py
-```
+## Quality coverage
 
-## Structure
-
-| File | Responsibility |
-|---|---|
-| `gui.py` | Authentication, workstation shell, and five product views |
-| `database.py` | Local schema and first-run initialization |
-| `user.py` | Authentication and atomic trade execution |
-| `portfolio.py` | Portfolio position reads |
-| `transaction.py` | Execution-ledger access |
-| `stock_api.py` | Validated quote and history boundary |
-| `insights.py` | Deterministic portfolio analysis |
-| `test_core.py` | Money-path, account, market-data, and analysis checks |
-
-## Data and security
-
-`stocktrader.db`, environment files, key files, and generated Python artifacts are ignored. The original GitHub history contained a populated database and an AlphaVantage key; if either held real credentials, rotate them and purge that history before treating the repository as private or secure.
+- 11 focused tests covering authentication, database initialization, trade invariants, market-data normalization, and portfolio analysis
+- Successful compilation, dependency, live-quote, authentication-window, and signed-in workspace checks

@@ -2,6 +2,30 @@
 
 StockTrader has been completely redesigned as a focused desktop paper-trading workstation. The rebuild keeps the virtual investing concept while replacing the interface, trading flow, data layer, and account security.
 
+![StockTrader portfolio overview](docs/screenshots/overview.png)
+
+## Install
+
+StockTrader requires Python 3.9 or newer and an internet connection for market data.
+
+```powershell
+git clone https://github.com/JoelObinnaEze/StockTrader.git
+cd StockTrader
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+```
+
+On macOS or Linux, activate the environment with `source .venv/bin/activate` instead.
+
+## Run
+
+```powershell
+python gui.py
+```
+
+Create an account to start with $10,000 in virtual cash. The application creates a private, ignored SQLite database on first launch; market quotes may be delayed.
+
 ## New workstation experience
 
 - Persistent sidebar navigation across Overview, Trade, Portfolio, Activity, and Research
@@ -34,6 +58,12 @@ StockTrader has been completely redesigned as a focused desktop paper-trading wo
 - A single validated yfinance boundary for quote and history data
 - Recoverable handling for unavailable, invalid, or non-finite market data
 - Private runtime databases, credentials, and generated artifacts excluded from version control
+
+## Interface
+
+| Execution desk | Price research |
+|---|---|
+| ![StockTrader execution desk](docs/screenshots/trade.png) | ![StockTrader price research](docs/screenshots/research.png) |
 
 ## Quality coverage
 
